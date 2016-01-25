@@ -1,0 +1,9 @@
+database: "sqlite:./router.db"            # DataMapper connection string
+api:      "http://127.0.0.1:8888"         # Oxidized REST API location.  Must include protocol (http://).
+ldap:
+  server:       "domain.tld"              # FQDN of available LDAP server
+  bindDN:       "DC=domain, DC=tld"       # Root of the LDAP server
+  bindUser:     "username@domain.tld"     # Username used for initial connection; doesn't need special privileges in AD.
+  bindPassword: "password"
+  allowedGroups:                          # Allow all groups by default.  These only have to be partial group names, not
+    - ""                                  # case sensitive.

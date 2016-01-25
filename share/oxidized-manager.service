@@ -1,0 +1,16 @@
+[Unit]
+Description=Oxidized Manager - Web-based device configuration for Oxidized.
+After=network.target
+
+[Service]
+WorkingDirectory=/home/oxidized/oxidized-manager
+PIDFile=/home/oxidized/oxidized-manager.pid
+
+ExecStart=/usr/bin/env bundle exec puma -e production \
+          --pidfile /home/oxidized/oxidized-manager.pid
+
+User=oxidized
+Group=oxidized
+
+[Install]
+WantedBy=multi-user.target

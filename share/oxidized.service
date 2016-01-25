@@ -1,0 +1,15 @@
+[Unit]
+Description=Oxidized - Network Device Configuration Backup Tool
+
+[Service]
+WorkingDirectory=/home/oxidized
+PIDFile=/home/oxidized/pid
+
+ExecStart=/usr/local/bin/oxidized
+ExexReload=/bin/kill -HUP $MAINPID
+
+User=oxidized
+Group=oxidized
+
+[Install]
+WantedBy=multi-user.target

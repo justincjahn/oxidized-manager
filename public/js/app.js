@@ -746,6 +746,8 @@ var app = {
      * Periodically fetches data from the backend about the status of each device, and loops through
      * the device collection, updating them.  Anything hooked into the model's change events will
      * update.
+     *
+     * @NOTE: The stats API does not sort events for you.
      */
     updateStatus: function () {
       var self = this;
@@ -766,13 +768,24 @@ var app = {
 
           // The server may not know about this device
           if (data[address]) {
-            var statuses = _.keys(data[address]);
-            var status   = statuses.pop();
-            device.set('status', status);
+            // Flatten the array for easier sorting
+            var deviceStatus = new Array();
+            var statuses     = _.keys(data[address]);
 
-            var aAttempts = data[address][status];
-            var last_attempt = aAttempts.pop();
-            device.set('last_attempt', last_attempt.end);
+            _.each(statuses, function (sStatus) {
+              _.each(data[address][sStatus], function (entry) {
+                entry.status = sStatus;
+                deviceStatus.push(entry);
+              });
+            });
+
+            // Sort the statuses by date ascending, and pull the last entry
+            deviceStatus = _.sortBy(deviceStatus, 'end');
+            deviceStatus = deviceStatus.pop();
+
+            // Set the status
+            device.set('status', deviceStatus.status);
+            device.set('last_attempt', deviceStatus.end);
           }
         });
       }).always(function () {

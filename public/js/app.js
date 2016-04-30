@@ -545,7 +545,7 @@ var app = {
 
       // Prevent the events from bubbling up
       if (e) { e.preventDefault(); }
-      
+
       // Make sure the data is valid before saving
       if (!this.beforeSubmit()) { return false; }
 
@@ -784,8 +784,14 @@ var app = {
             deviceStatus = deviceStatus.pop();
 
             // Set the status
-            device.set('status', deviceStatus.status);
-            device.set('last_attempt', deviceStatus.end);
+            if (deviceStatus) {
+              device.set('status', deviceStatus.status);
+              device.set('last_attempt', deviceStatus.end);
+            } else {
+              // The device may not have a status yet!
+              device.set('status', device.defaults.status);
+              device.set('last_attempt', device.defaults.last_attempt);
+            }
           }
         });
       }).always(function () {

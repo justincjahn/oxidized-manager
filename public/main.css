@@ -1,0 +1,723 @@
+:root {
+    --clr-neutral-100: 200 8% 98%;
+    --clr-neutral-200: 200 8% 96%;
+    --clr-neutral-300: 200 8% 93%;
+    --clr-neutral-400: 200 8% 88%;
+    --clr-neutral-500: 200 8% 80%;
+    --clr-neutral-600: 200 8% 73%;
+    --clr-neutral-900: 0 0% 0%;
+
+    --clr-primary-400: 210 29% 24%;
+
+    --clr-accent1-100: 0 0% 100%;
+    --clr-accent1-200: 211 100% 83%;
+    --clr-accent1-300: 211 100% 75%;
+    --clr-accent1-400: 211 100% 55%;
+    --clr-accent1-500: 211 100% 46%;
+    --clr-accent1-600: 211 100% 41%;
+    --clr-accent1-700: 211 100% 36%;
+    --clr-accent1-800: 211 100% 23%;
+    --clr-accent1-900: 0 0% 0%;
+
+    --clr-destructive-100: 0 0% 100%;
+    --clr-destructive-200: 354 70% 74%;
+    --clr-destructive-300: 354 70% 64%;
+    --clr-destructive-400: 354 70% 54%;
+    --clr-destructive-500: 354 70% 44%;
+    --clr-destructive-600: 354 70% 24%;
+    --clr-destructive-900: 0 0% 0%;
+
+    --border-radius: 0.25em;
+    --content-width: 80rem;
+
+    --font-size-default: 1rem;
+    --font-size-100: 0.75em;
+    --font-size-200: 0.85em;
+    --font-size-300: 0.9em;
+    --font-size-400: 1em;
+    --font-size-600: 1.15em;
+    --font-size-700: 1.25em;
+    --font-size-800: 1.75em;
+    --font-size-900: 2em;
+
+    --font-family-default: Avenir, Helvetica, Arial, sans-serif;
+
+    --margin-400: 1rem;
+    --margin-600: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --clr-neutral-100: 200 8% 14%;
+        --clr-neutral-200: 200 8% 19%;
+        --clr-neutral-300: 200 8% 27%;
+        --clr-neutral-400: 200 8% 38%;
+        --clr-neutral-500: 200 8% 45%;
+        --clr-neutral-600: 200 8% 63%;
+        --clr-neutral-900: 0 0% 0%;
+
+        --clr-primary-400: 210 22% 82%;
+
+        --clr-accent1-100: 211 44% 92%;
+        --clr-accent1-200: 211 100% 45%;
+        --clr-accent1-300: 211 100% 33%;
+        --clr-accent1-400: 211 100% 23%;
+        --clr-accent1-500: 211 100% 16%;
+        --clr-accent1-600: 211 100% 12%;
+        --clr-accent1-700: 211 100% 8%;
+        --clr-accent1-800: 211 100% 6%;
+        --clr-accent1-900: 0 0% 0%;
+    }
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: var(--font-size-default, 1rem);
+}
+
+h1 {
+    font-size: var(--font-size-800, 1.75em);
+}
+
+ul[role='list'],
+ol[role='list'] {
+    list-style: none;
+}
+
+ul, ol {
+    margin-left: var(--margin-600, 2rem);
+}
+
+html {
+    background-color: hsl(var(--clr-neutral-400));
+}
+
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-size:               var(--font-size-default, 12pt);
+    line-height:             1.5;
+    min-height:              100vh;
+    color:                   hsl(var(--clr-primary-400));
+    font-family:             var(--font-family-default);
+    background-color:        hsl(var(--clr-neutral-100));
+    text-rendering:          optimizeSpeed;
+    -webkit-font-smoothing:  antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a, a:visited {
+    color: hsl(var(--clr-primary-400));
+}
+
+a:hover {
+    filter: brightness(2);
+}
+
+/*
+ * FORM ELEMENTS
+ */
+
+label {
+    font-weight: bold;
+}
+
+label span.required {
+    font-size: 0.7em;
+    color: hsl(var(--clr-destructive-600));
+    vertical-align: super;
+}
+
+input {
+    font-size: var(--font-size-300);
+}
+
+input[type=text],
+input[type=password]
+{
+    padding: 0.5em;
+    color: hsl(var(--clr-primary-400));
+    background-color: hsl(var(--clr-neutral-200));
+    outline-style: none;
+    outline-color: hsl(var(--clr-accent1-600));
+    border: 1px solid hsl(var(--clr-accent1-300));
+    border-radius: var(--border-radius);
+    width: 100%;
+}
+
+:is(input[type=text], input[type=password]):focus-within{
+    outline-style: solid;
+    outline-width: 0.125rem;
+}
+
+input[type=text]:invalid,
+input[type=password]:invalid,
+input[type=text].error,
+input[type=password].error
+{
+    outline-color: hsl(var(--clr-destructive-400));
+    border: 1px solid hsl(var(--clr-destructive-400));
+}
+
+input:is([type=text], [type=password]):disabled {
+    border-color: hsl(var(--clr-neutral-400));
+    color: hsl(var(--clr-primary-400) / 0.75);
+}
+
+/*
+ * BUTTONS
+ */
+
+button,
+input[type=submit]
+{
+    --clr-font: var(--clr-primary-400);
+    --clr-bg: var(--clr-neutral-300);
+    --clr-border: var(--clr-neutral-500);
+
+    outline: 0;
+    padding: 0.5em;
+    min-width: 7rem;
+    user-select: none;
+    cursor: pointer;
+
+    font-size: var(--font-size-200);
+    line-height: 1.2;
+
+    color: hsl(var(--clr-font));
+    background-color: hsl(var(--clr-bg));
+    border: 1px solid hsl(var(--clr-border));
+    border-radius: var(--border-radius);
+
+    transition-property: filter, background-color;
+    transition-duration: 0.15s;
+}
+
+button:hover:enabled,
+input[type=submit]:hover:enabled
+{
+    filter: brightness(0.9);
+}
+
+button:active:enabled,
+input[type=submit]:active:enabled
+{
+    filter: brightness(1);
+}
+
+button:focus:enabled,
+input[type=submit]:focus:enabled
+{
+    --clr-border: var(--clr-accent1-300);
+    text-decoration: underline;
+}
+
+button:disabled,
+input[type=submit]:disabled
+{
+    --clr-font: var(--clr-neutral-600);
+    --clr-bg: var(--clr-neutral-300);
+    --clr-border: var(--clr-neutral-500) / 0.75;
+    font-weight: 100;
+    font-style: italic;
+    cursor: inherit;
+}
+
+button[data-button-type="chonky"] {
+    height: 2.5em;
+}
+
+/*
+ * BUTTON VARIANT - DESTRUCTIVE
+ */
+
+button.destructive,
+input[type=submit].destructive,
+.modal.destructive button.primary
+{
+    --clr-font: var(--clr-destructive-100);
+    --clr-bg: var(--clr-destructive-400);
+    --clr-border: var(--clr-destructive-500);
+}
+
+button.destructive:disabled,
+input[type=submit].destructive:disabled,
+.modal.destructive button.primary:disabled
+{
+    --clr-font: var(--clr-destructive-100) / 0.85;
+    --clr-bg: var(--clr-destructive-300);
+    --clr-border: var(--clr-destructive-300);
+}
+
+button.destructive:focus,
+input[type=submit].destructive:focus,
+.modal.destructive button.primary:focus
+{
+    --clr-border: var(--clr-destructive-900);
+}
+
+/*
+ * BUTTON VARIANT - PRIMARY
+ */
+
+button.primary,
+input[type=submit].primary
+{
+    --clr-font: var(--clr-accent1-100);
+    --clr-bg: var(--clr-accent1-400);
+    --clr-border: var(--clr-accent1-500);
+}
+
+button.primary:disabled,
+input[type=submit].primary:disabled
+{
+    --clr-font: var(--clr-accent1-100) / 0.75;
+    --clr-bg: var(--clr-accent1-300);
+    --clr-border: var(--clr-accent1-300)
+}
+
+button.primary:focus,
+input[type=submit].primary:focus
+{
+    --clr-border: var(--clr-accent1-900);
+}
+
+button.secondary {
+    border: none;
+    background-color: transparent;
+}
+
+button.secondary:hover {
+    text-decoration: underline;
+}
+
+/*
+ * FIELDSET
+ */
+
+:is(.form, form) .fieldset {
+    display: flex;
+    flex-direction: column;
+}
+
+:is(.form, form) .fieldset + .fieldset {
+    margin-top: 1em;
+}
+
+:is(.form, form) .fieldset.inline {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1em;
+}
+
+:is(.form, form) .fieldset.inline label {
+    width: 12em;
+}
+
+.fieldset.inline {
+    /* Inline input components not in a form should be displayed side by side. */
+    display: inline-block;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    position: relative;
+}
+
+table td,
+table th {
+    text-align: left;
+}
+
+table tr:last-child th {
+    position: sticky;
+    top: 0;
+
+    padding-bottom: 0.25em;
+
+    background-color: hsl(var(--clr-neutral-100));
+    border-bottom: 1px solid hsl(var(--clr-neutral-400));
+}
+
+table tr th {
+    padding-top: 0.5em;
+    padding-left: 0.25em;
+}
+
+table tr td {
+    padding: 0.5em 0.25em;
+}
+
+table tr:nth-child(even) {
+    background-color: hsl(var(--clr-neutral-300));
+}
+
+table.selectable tr {
+    cursor: pointer;
+    user-select: none;
+}
+
+table.selectable tbody tr:hover {
+    background-color: hsl(var(--clr-neutral-400));
+}
+
+table.selectable tr.selected {
+    color: hsl(var(--clr-accent1-900));
+    background-color: hsl(var(--clr-accent1-200));
+}
+
+table.selectable tr.selected:hover {
+    background-color: hsl(var(--clr-accent1-300));
+}
+
+/* LAYOUT HELPERS */
+
+.section {
+    /* Introduces block spacing around the element itself */
+
+    margin-block: var(--section-spacer, var(--margin-400));
+}
+
+.section[data-section-type="bottomless"] {
+    margin-bottom: 0;
+}
+
+.flow > *:where(:not(:first-child)) {
+    /* Introduces spacing between elements again. */
+
+    margin-top: var(--flow-spacer, var(--margin-400));
+}
+
+.container {
+    /* Indents a section */
+
+    padding-inline: clamp(1rem, 5cqi, 10rem);
+    width: 100%;
+    max-width: var(--content-width, 80rem);
+    margin-inline: auto;
+}
+
+.flex-group {
+    /* Turns the element into a responsive flex container. */
+
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: var(--flex-group-gap, 1rem);
+}
+
+@media screen and (min-width: 47rem) {
+    .flex-group {
+        flex-direction: row;
+    }
+}
+
+.flex-group[data-flex-type='start'] {
+    justify-content: flex-start;
+}
+
+.flex-group[data-flex-type='center'] {
+    justify-content: center;
+}
+
+.flex-group[data-flex-type='end'] {
+    justify-content: flex-end;
+}
+
+.flex-group[data-flex-direction='row'] {
+    flex-direction: row;
+}
+
+.flex-group[data-flex-direction='column'] {
+    flex-direction: column;
+}
+
+.flex-group[data-flex-align='baseline'] {
+    align-items: baseline;
+}
+
+.main-wrapper {
+    /* Should be applied to the main div #app of the application. */
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-header {
+    background-color: hsl(var(--clr-neutral-300));
+}
+
+.main-header img {
+    max-width: 15rem;
+    max-height: clamp(50px,7vw,90px);
+    margin-block: 0.15rem;
+}
+
+.main-header .flex-group {
+    align-items: center;
+}
+
+.main-content {
+    /* Place this on elements that you want to "drill down" the main height to. */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+}
+
+.main-wrapper > .main-content,
+.main-content .main-content,
+.flex-100 {
+    /* Forces subsequent .main-content elements to take up the most space.*/
+
+    flex: 1 100%;
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.height-100 {
+    height: 100%;
+}
+
+.main-footer {
+    /* The site has a very small footer with version information. */
+
+    font-size: 0.8em;
+    text-align: center;
+    opacity: 0.5;
+    user-select: none;
+}
+
+/* STYLE HELPERS */
+
+.sub-nav a {
+    /* Nice styling for primary groups of links. */
+
+    font-size: 1.25em;
+    color: hsl(var(--clr-neutral-800));
+    text-decoration: none;
+    width: fit-content;
+
+    background:
+        linear-gradient(currentColor 0 0)
+        bottom
+        left / var(--underline-width, 0%) 0.1em
+        no-repeat;
+
+    transition: .25s;
+}
+
+.sub-nav a:where(:hover, :active, :focus) {
+    --underline-width: 100%;
+    color: hsl(var(--clr-accent1-600));
+    outline: 0;
+}
+
+.sub-nav a.router-link-active {
+    color: hsl(var(--clr-accent1-400));
+}
+
+.sub-menu {
+    padding-block: 0.5rem;
+    background-color: hsl(var(--clr-neutral-400));
+    border-top: 1px solid hsl(var(--clr-neutral-500));
+    border-bottom: 1px solid hsl(var(--clr-neutral-500));
+}
+
+.tool-strip {
+    /* Used for groups of buttons that automatically wrap on small screens. */
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem;
+    padding-block: 0.1rem;
+}
+
+.pagination-buttons {
+    /* Remove styling and center buttons on the page. */
+
+    text-align: center;
+    margin-top: var(--margin-400);
+}
+
+.pagination-buttons button {
+    background-color: transparent;
+    border: none;
+}
+
+.pagination-buttons button:enabled:hover {
+    text-decoration: underline;
+}
+
+.scroll-wrapper {
+    /* Wrap a table element with this class to enable horizontal scrolling. */
+
+    max-width: 100%;
+    overflow-y: auto;
+}
+
+.nowrap {
+    /* Force an element not to wrap. */
+
+    white-space: nowrap;
+}
+
+.help-text {
+    /* Add this to an element to emphasize or provide help context. */
+
+    font-size: var(--font-size-200);
+    font-style: italic;
+    line-height: 2;
+}
+
+.error {
+    /* Add this to an element to emphasize the element's content as an error */
+
+    color: hsl(var(--clr-destructive-500));
+}
+
+.loading {
+    /* Add this to a component that's still loading data. */
+
+    opacity: 0.4;
+}
+
+.split-data {
+    /** Splits an element's contents in two and places dots in the space between. */
+
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.split-data :nth-child(1) {
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
+}
+
+.split-data :nth-child(1)::after {
+    content: '......................................................................................................................................................................................................'
+}
+
+/* FONT HELPERS */
+
+.emphasis {
+    font-weight: bold;
+}
+
+.no-select {
+    user-select: none;
+}
+
+.size-xxl {
+    font-size: var(--font-size-900);
+}
+
+.size-xl {
+    font-size: var(--font-size-800);
+}
+
+.size-l {
+    font-size: var(--font-size-700);
+}
+
+.size-m {
+    font-size: var(--font-size-400);
+}
+
+.size-s {
+    font-size: var(--font-size-300);
+}
+
+.size-xs {
+    font-size: var(--font-size-200)
+}
+
+.size-xxs {
+    font-size: var(--font-size-100);
+}
+
+/* CARD */
+
+.card {
+    padding: var(--card-padding, 1rem);
+    background-color: var(--card-bg, hsl(var(--clr-neutral-400) / 25%));
+    border-radius: var(--border-radius, 0.5rem);
+
+    transition:
+        box-shadow var(--card-transition, 0.25s),
+        color var(--card-transition, 0.25s),
+        background-color var(--card-transition, 0.25s);
+}
+
+.card[data-card-type="flat"] {
+    border: 1px solid var(--card-bdr-normal-1, hsl(var(--clr-neutral-600)));
+}
+
+.card:not([data-card-type]),
+.card[data-card-type="floating"] {
+    box-shadow:
+        var(--card-bdr-normal-1, hsl(var(--clr-neutral-900) / 15%)) 0px 1px 2px 0px,
+        var(--card-bdr-normal-2, hsl(var(--clr-neutral-600) / 30%)) 0px 1px 3px 1px;
+}
+
+.card:not([data-card-full]) {
+    width: var(--card-width, 20rem);
+    min-height: var(--card-min-height, 12rem);
+}
+
+.card[data-card-clickable] {
+    color: var(--card-color-inactive, hsl(var(--clr-neutral-900) / 60%));
+}
+
+.card[data-card-clickable]:hover {
+    --card-bg: var(--card-bg-hover, hsl(var(--clr-neutral-100)));
+
+    cursor: pointer;
+    color: inherit;
+
+    box-shadow:
+        var(--card-bdr-hover-1, hsl(var(--clr-neutral-600) / 15%)) 0px 3px 6px,
+        var(--card-bdr-hover-2, hsl(var(--clr-neutral-900) / 25%)) 0px 3px 6px;
+}
+
+.card.selected {
+    color: inherit;
+    background-color: var(--card-bg-selected, hsl(var(--clr-neutral-100)));
+
+    box-shadow:
+        var(--card-bdr-selected-1, hsl(var(--clr-accent1-700) / 30%)) 0px 1px 2px 0px,
+        var(--card-bdr-selected-2, hsl(var(--clr-accent1-400) / 25%)) 0px 1px 3px 1px;
+}
+
+.pre {
+    overflow: auto;
+    background-color: hsl(var(--clr-neutral-300));
+    color: hsl(var(--clr-primary-400));
+    word-break: normal;
+    word-wrap: normal;
+    white-space: pre;
+    padding: 0.5em;
+}

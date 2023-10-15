@@ -1,0 +1,29 @@
+<div class="container section flow card">
+    <h2 class="size-l">Please Login</h2>
+
+    <form method="post" action="/login">
+        <div class="fieldset">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+
+        <div class="fieldset">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <%= csrf_tag('/login') %>
+
+        <% if @error %>
+            <p class="error"><%= @error %></p>
+        <% end %>
+
+        <button
+            type="submit"
+            class="primary section width-100"
+            data-button-type="chonky"
+        >
+            Login
+        </button>
+    </form>
+</div>

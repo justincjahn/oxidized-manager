@@ -1,0 +1,15 @@
+<div class="container section flow">
+    <% url = "/devices/#{@device['address']}/delete" %>
+
+    <h2 class="size-l">Delete Device</h2>
+
+    <p class="error">Are you sure you wish to delete this device?</p>
+
+    <form method="post" action="<%= url %>">
+        <%= csrf_tag(url) %>
+
+        <button type="submit" class="destructive">
+            Delete
+        </button>
+    </form>
+</div>

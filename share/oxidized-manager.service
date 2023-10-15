@@ -2,15 +2,45 @@
 Description=Oxidized Manager - Web-based device configuration for Oxidized.
 After=network.target
 
+# Uncomment for socket activation (see below)
+# Requires=puma.socket
+
 [Service]
-WorkingDirectory=/home/oxidized/oxidized-manager
-PIDFile=/home/oxidized/oxidized-manager.pid
+# {Puma} supports systemd's {Type=notify} and watchdog service
+# monitoring, as of {Puma} 5.1 or later.
+# On earlier versions of {Puma} or JRuby, change this to {Type=simple} and remove
+# the {WatchdogSec} line.
+Type=notify
 
-ExecStart=/usr/bin/env bundle exec puma -e production \
-          --pidfile /home/oxidized/oxidized-manager.pid
+# If your {Puma} process locks up, systemd's watchdog will restart it within seconds.
+WatchdogSec=10
 
+# Preferably configure a non-privileged user
 User=oxidized
-Group=oxidized
+
+# The path to your application code root directory.
+# Also replace the "<YOUR_APP_PATH>" placeholders below with this path.
+# Example /home/username/myapp
+WorkingDirectory=/home/oxidized/oxidized-manager
+
+# Helpful for debugging socket activation, etc.
+# Environment=PUMA_DEBUG=1
+
+# SystemD will not run puma even if it is in your path. You must specify
+# an absolute URL to puma. For example /usr/local/bin/puma
+# Alternatively, create a binstub with `bundle binstubs puma --path ./sbin` in the WorkingDirectory
+ExecStart=/usr/bin/env bundle exec puma -e production \
+    --pidfile /home/oxidized/oxidized-manager.pid \
+    -b tcp://127.0.0.1:9292
+
+# Variant: Rails start.
+# ExecStart=/<FULLPATH>/bin/puma -C <YOUR_APP_PATH>/config/puma.rb ../config.ru
+
+# Variant: Use `bundle exec --keep-file-descriptors puma` instead of binstub
+# Variant: Specify directives inline.
+# ExecStart=/<FULLPATH>/puma -b tcp://0.0.0.0:9292 -b ssl://0.0.0.0:9293?key=key.pem&cert=cert.pem
+
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

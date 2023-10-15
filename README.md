@@ -1,225 +1,147 @@
 # Oxidized Manager
 
-A web application to manage devices for the [Oxidized Network Configuration Manager](https://github.com/ytti/oxidized).
+A web application to manage devices for the
+[Oxidized Network Configuration Manager](https://github.com/ytti/oxidized). The
+Oxidized API does not have any authentication mechanism nor any mechanism to
+manage the router database. This application works by sharing an SQLite3
+database with Oxidized and querying the Oxidized Web API.
 
-## Installing oxidized and oxidized-manager
+## Installation
 
-Oxidized itself is very easy to install and update because it's published as a ruby gem. Please refer to the
-installation documentation available in the [Oxidized Readme File](https://github.com/ytti/oxidized#installation)
-for more detailed documentation than provided here.
+Oxidized itself is very easy to install and update because it's published as a
+ruby gem. Please refer to the installation documentation available in the
+[Oxidized Readme File](https://github.com/ytti/oxidized#installation) to get
+Oxidized up and running.
 
-Please note that the instructions below were designed and tested for CentOS 7.  There is no reason oxidized-manager
-wouldn't run on other distributions, however.
+The following instructions assume that oxidized is run as the user `oxidized`
+in the `/home/oxidized/.config/oxidized` path.
 
-### 1. Install system dependencies
+### Install system dependencies
 
-    sudo yum install cmake sqlite-devel openssl-devel
+```shell
+sudo apt install cmake libsqlite3-dev libssl-dev libyaml-dev
+```
 
-### 2. Install oxidized gems
+### Clone the repo
 
-    sudo gem install oxidized
-    sudo gem install oxidized-script oxidized-web sequel sqlite3
+```shell
+sudo -u oxidized -H git clone https://github.com/justincjahn/oxidized-manager.git /home/oxidized/oxidized-manager
+```
 
-### 3. Create an unpriveleged user
+### Modify the oxidized configuration file
 
-    useradd --shell /sbin/nologin -m oxidized
+Edit the configuration file's `source` setting and ensure the rest API is enabled
+at `127.0.0.1:8888`:
 
-### 4. Clone the oxidized-manager repository
+```yaml
+rest: 127.0.0.1:8888
+source:
+  sql:
+    adapter: sqlite
+    database: /home/oxidized/.config/router.db
+    table: devices
+    map:
+      name: address
+      model: type
+      username: username
+      password: password
+    vars_map:
+      enable: enable
+```
 
-    sudo su - # Unless non-root users have access to the Oxidized home directory.
-    cd /home/oxidized
-    sudo -u oxidized -H git clone git@github.com:justinjahn/oxidized-manager.git
+### Install dependencies
 
-### 5. Copy the oxidized systemd service file
+Make sure bundler is installed:
 
-The `systemd` file that `oxidized` comes with runs the application as the `root` user, which is not ideal.
-oxidized-manager comes with one a little bit better, running oxidized as the user created earlier:
+```shell
+sudo gem install bundler
+```
+Run bundler in the `oxidized-manager` path:
 
-    sudo cp oxidized-manager/share/oxidized.service /etc/systemd/system/oxidized.service
+```shell
+sudo -u oxidized -H /bin/bash
+cd ~/oxidized-manager
+bundle install --without development
+```
 
-### 6. Enable oxidized, and perform the first run
+### Copy and edit the configuration file
 
-Then oxidized first runs, it will create a configuration file, `/home/oxidized/.config/oxidized/config` that must be
-modified:
+```shell
+cp config.yml.dist config.yml
+vi config.yml
+```
 
-    systemctl enable oxidized
-    systemctl start oxidized
-
-### 7. Modify the auto-generated configuration file
-
-    sudo -u oxidized -H vi /home/oxidized/.config/oxidized/config
-
-Edit the configuration file to look similar to the config below.  Note that the important bits for `Oxidized-Manager` are
-the `rest` and `source` sections.
-
-    ---
-    username: username
-    password: password
-    model: junos
-    interval: 3600
-    log: /home/oxidized/.config/oxidized/log
-    debug: false
-    threads: 30
-    timeout: 20
-    retries: 3
-    prompt: !ruby/regexp /^([\w.@-]+[#>]\s?)$/
-    rest: 127.0.0.1:8888
-    vars: {}
-    groups: {}
-    input:
-      default: ssh, telnet
-      debug: /tmp/oxidized-debug
-      ssh:
-        secure: false
-    output:
-      default: git
-      git:
-        user: oxidized
-        email: oxidized@my-server.local
-        repo: /home/oxidized/network-config
-    source:
-      default: sql
-      csv:
-        file: /home/oxidized/.config/oxidized/router.conf
-        delimiter: !ruby/regexp /:/
-        map:
-          name: 0
-          model: 1
-          username: 2
-          password: 3
-        vars_map:
-          enable: 4
-        sql:
-          adapter: sqlite
-          database: /home/oxidized/.config/router.db
-          table: devices
-          map:
-            name: address
-            model: type
-            username: username
-            password: password
-          vars_map:
-            enable: enable
-    model_map:
-      cisco: ios
-      juniper: junos
-
-#### 7.1. Post-Commit Hooks
-
-Fun fact! `Oxidized` can run arbitrary commands after commit:
-
-    hooks:
-      post-commit-push:
-        type: exec
-        events: [post_store]
-        cmd: 'cd /home/oxidized/network-config && git push origin master'
-        async: true
-        timeout: 120
-
-Just add the necessary remote(s), and make sure the proper SSH keys are installed under the `oxidized` user.
-
-### 8. Installing dependencies
-
-The `bundler` gem is the only global dependency required:
-
-    sudo gem install bundler
-
-    cd oxidized-manager # Your current working directory should still be /home/oxidized from step 4.
-    sudo -u oxidized -H bundle install --without development
-
-#### 8.1. Command Not Found: bundle
-
-This can occur because the `/usr/local/bin` path is not in the sudoers file.  On most modern distributions,
-the `$PATH` variable is overwritten when running `sudo`.  Use the `visudo` command as `root` to edit the
-`Defaults secure_path` section to fix this.
-
-### 9. Copy and edit the configuration file
-
-    sudo -u oxidized -H cp config/config.yml.dist config/config.yml
-    sudo -u oxidized -H vi config/config.yml
-
-Note that the `database` config entry should point to whatever file you specified in the
-[Installing Oxidized](#4-clone-the-oxidized-manager-repository) section.  Fill in the `ldap` section with
+Note that the `database` config entry should point to whatever file you
+specified in the Oxidized configuration file. Fill in the `ldap` section with
 your domain information, and the credentials of an __unprivileged__ user.
 
-### 10. Copy the systemd service file
+### Copy the systemd service file and enable
 
-    sudo cp share/oxidized-manager.service /etc/systemd/system/oxidized-manager.service
+```shell
+sudo cp share/oxidized-manager.service /etc/systemd/system/oxidized-manager.service
+sudo systemctl enable oxidized-manager
+sudo systemctl start oxidized-manager
+```
 
-### 11. Enable and start oxidized-manager
+#### Install and configure NGINX
 
-    sudo systemctl enable oxidized-manager
-    sudo systemctl start oxidized-manager
+Install and configure NGINX (outside the scope of this article) to proxy the
+puma application server running at the uri `127.0.0.1:9292`, and use a
+configuration similar to this:
 
-### 12. Accessing the application
+```
+upstream app {
+  server 127.0.0.1:9292 fail_timeout=0;
+}
 
-The web interface may be accessed via `http://{server-ip}:4567/` without any additional steps if the proper firewall
-configuration is used.  If you wish to serve `oxidized-manager` on port 80, there are a few options:
+server {
+  listen 80;
+  root /home/oxidized/oxidized-manager/public;
+  keepalive_timeout 5;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header Host $host;
+  proxy_pass http://app;
+}
+```
 
-#### Option 1: Configure Firewall
+## Updating
 
-Non-root users cannot open ports below 1024.  While there are _production-ready_ solutions for this, such as using nginx to proxy
-the `oxidized-manager` application, it isn't necessary for low-volume applications such as this.  To get around this issue, one can
-use `firewall-cmd` to redirect port 80 traffic to Sinatra's default port (4567):
+### Stop the application
 
-    sudo firewall-cmd --set-default-zone=public
-    sudo firewall-cmd --zone=public --add-masquerade --permanent
-    sudo firewall-cmd --zone=public --add-forward-port=port=80:proto=tcp:toport=8080 --permanent
-    sudo firewall-cmd --reload
+```shell
+sudo systemctl stop oxidized-manager
+```
 
-#### Option 2: Install and configure NGINX
+### Backup the device database
 
-Install and configure NGINX (outside the scope of this article), and use a configuration similar to this:
+Copy your SQLite database somewhere safe in case things go south.
+Reference the `config.yml` file if you've forgotten where the database
+is located.
 
-    upstream app {
-      server 127.0.0.1:4567 fail_timeout=0;
-    }
+### Get the latest code
 
-    server {
-      listen 80;
-      root /home/oxidized/oxidized-manager/public;
-      try_files $uri/index.html $uri @app;
+```shell
+sudo -u oxidized -H /bin/bash
+cd ~/oxidized-manager
+git fetch --all
+git checkout master
+bundle install --without development
+```
 
-      location @app {
-        proxy_pass http://app;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-      }
+### Check for configuration changes
 
-      client_max_body_size 4G;
-      keepalive_timeout 10;
-    }
+Take a quick peek at `config/config.yml.dist` to make sure no new settings are
+available.  If they are, add them to your config.
 
-## Updating Oxidized-Manager
+### Copy the latest systemd file
 
-### 1. Stop the web application
+```shell
+sudo cp share/oxidized-manager.service /etc/systemd/system/oxidized-manager.service
+sudo systemctl daemon-reload
+```
 
-    sudo systemctl stop oxidized-manager
+### Start the application
 
-### 2. Backup the device database
-
-Copy your SQLite database somewhere safe in case things go south.  Reference the `config.yml` file if you've forgotten
-where the database is located.
-
-### 3. Get the latest code
-
-    sudo su - # Unless non-root users have access to the Oxidized home directory.
-    cd /home/oxidized/oxidized-manager
-    sudo -u oxidized -H git fetch --all
-    sudo -u oxidized -H git checkout -- Gemfile.lock
-    sudo -u oxidized -H git checkout master
-
-### 4. Check for configuration changes
-
-Take a quick peek at `config/config.yml.dist` to make sure no new settings are available.  If they are, add them to your
-config.
-
-### 5. Copy the latest systemd file
-
-    sudo cp share/oxidized-manager.service /etc/systemd/system/oxidized-manager.service
-    sudo systemctl daemon-reload
-
-### 6. Start the application
-
-    sudo systemctl start oxidized-manager
+```shell
+sudo systemctl start oxidized-manager
+```

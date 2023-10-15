@@ -1,24 +1,15 @@
-source 'https://rubygems.org'
+# frozen_string_literal: true
 
-# Build
-gem 'rake'
+source "https://rubygems.org"
 
-# Web Application
-gem 'sass'
-gem 'sinatra'
-gem 'sinatra-contrib'
+gem "roda"
+gem "tilt"
+gem "puma"
+gem "net-ldap"
+gem "sqlite3"
+gem "sequel"
 
-# Authentication
-gem 'net-ldap'
-
-# Database
-gem 'data_mapper'
-gem 'dm-sqlite-adapter'
-
-# Server
-gem 'puma'
-
-# Development Tools
 group :development do
-  gem 'rerun'
+  gem "solargraph"
+  gem "rerun"
 end

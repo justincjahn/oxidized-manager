@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Oxidized Manager<%= @title ? ' - ' + @title : '' %></title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' type='text/css' href='/main.css'>
+    </head>
+    <body>
+        <div class="main-wrapper">
+            <header class="main-header flex-group">
+                <div class="container flex-group">
+                    <h1 class="section">
+                        <a href="/">Oxidized Manager</a>
+                    </h1>
+
+                    <% if @username %>
+                        <a href="/logout">Logout</a>
+                    <% end %>
+                </div>
+            </header>
+
+            <main class="main-content"><%= yield %></main>
+
+            <footer class="main-footer">
+                Oxidized Manager v0.0.1
+            </footer>
+        </div>
+    </body>
+</html>

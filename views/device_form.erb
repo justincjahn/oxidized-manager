@@ -1,0 +1,91 @@
+<div class="container section flow">
+    <%
+        editing = !@device['address'].nil?
+        action = editing ? "Edit" : "Add"
+        url = editing ? "/devices/#{@device['address']}" : "/devices"
+    %>
+
+    <h2 class="size-l"><%= action %> Device</h2>
+
+    <form method="post" action="<%= url %>">
+        <% if editing %>
+            <input
+                type="hidden"
+                name="id"
+                value="<%= @device['address'] %>"
+            />
+        <% end %>
+
+        <div class="fieldset">
+            <label for="name">Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value="<%= @device['name'] %>"
+            />
+            
+            <% if flash["name"] %>
+                <p class="error"><%= flash["name"] %></p>
+            <% end %>
+        </div>
+
+        <div class="fieldset">
+            <label for="address">Address</label>
+            <input
+                type="text"
+                id="address"
+                name="address"
+                value="<%= @device['address'] %>"
+            />
+
+            <% if flash["address"] %>
+                <p class="error"><%= flash["address"] %></p>
+            <% end %>
+        </div>
+
+        <div class="fieldset">
+            <label for="type">Type</label>
+            <input
+                type="text"
+                id="type"
+                name="type"
+                value="<%= @device['type'] %>"
+            />
+
+            <% if flash["type"] %>
+                <p class="error"><%= flash["type"] %></p>
+            <% end %>
+        </div>
+
+        <div class="fieldset">
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                value=""
+            />
+        </div>
+
+        <div class="fieldset">
+            <label for="enable">Enable</label>
+            <input
+                type="password"
+                id="enable"
+                name="enable"
+                value=""
+            />
+        </div>
+
+        <%= csrf_tag(url) %>
+
+        <button
+            type="submit"
+            class="primary section width-100"
+            data-button-type="chonky"
+        >
+            <%= action %>
+        </button>
+    </form>
+</div>

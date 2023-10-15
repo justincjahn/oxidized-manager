@@ -98,9 +98,14 @@ server {
   listen 80;
   root /home/oxidized/oxidized-manager/public;
   keepalive_timeout 5;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header Host $host;
-  proxy_pass http://app;
+
+  try_files $uri @app;
+
+  location @app {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $host;
+    proxy_pass http://app;
+  }
 }
 ```
 

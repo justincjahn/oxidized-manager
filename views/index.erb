@@ -1,0 +1,51 @@
+<div class="container section | flow">
+    <% unless flash["success"].nil? %>
+        <p class="success"><%= flash["success"] %></p>
+    <% end %>
+
+    <div class="flex-group" data-flex-type='start'>
+        <a href="/devices/reload">Reload Router DB</a>
+        <a href="/devices/new">Create a new device</a>
+    </div>
+
+    <% if @devices and @devices.count > 0 %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Last Attempt</th>
+                    <th>Last Update</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @devices.each do |device| %>
+                    <tr data-device="<%= device['address'] %>">
+                        <% droot = "/devices/#{device['address']}" %>
+
+                        <td>
+                            <a href="<%= droot %>">
+                                <%= device['name'] %>
+                            </a>
+                        </td>
+                        <td><%= device['address'] %></td>
+                        <td><%= device['type'] %></td>
+                        <td><%= device['status'] %></td>
+                        <td><%= device['time'] %></td>
+                        <td><%= device['mtime'] %></td>
+                        <td>
+                            <a href="<%= droot %>/reload">Reload</a>
+                            <a href="<%= droot %>/edit">Edit</a>
+                            <a href="<%= droot %>/delete">Delete</a>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    <% end %>
+</div>
+
+<script type="module" src='app.js'></script>

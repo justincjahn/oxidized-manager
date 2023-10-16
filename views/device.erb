@@ -1,0 +1,44 @@
+    <div class="container section">
+        <h2>
+            <span class="size-xl"><%= @device['name'] %></span>
+            <span class="size-m">
+                <%= @device['address'] %>
+                (<a href="/devices/<%= @device['address'] %>/edit">Edit</a>)
+            </span>
+        </h2>
+
+        <a href="/devices/<%= @device['address'] %>/config">
+            Current Configuration
+        </a>
+    </div>
+
+    <div class="container section">
+        <h4 class="size-l">Version History</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Num</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @device['versions'].each do |version| %>
+                    <tr>
+                        <td><%= version['num'] %></td>
+                        <td><%= version['date'] %></td>
+                        <td>
+                            <%
+                                num = version['num']
+                                date = version['date']
+                                oid = version['oid']
+                                href = "/devices/#{@device['address']}/config?oid=#{oid}&date=#{date}&num=#{num}"
+                            %>
+                            <a href="<%= href %>">Config</a>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>

@@ -1,32 +1,7 @@
-# OSX
-.DS_Store
-.AppleDouble
-.LSOverride
+# Config files
+config.yml
 
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-Temporary Items
-.apdisk
-
-# Don't add config files without a .dist extension
-config/*.yml
-
-# Don't include compiled files
-public/js/site.js
-public/css/site.css
-public/css/site.css.map
-.sass-cache/
-
-# Don't include vendor code
-vendor/
-
-# Database files are automatically created on first run
+# Database files
 *.db
+*.sqlite
+*.sqlite3

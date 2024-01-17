@@ -177,6 +177,7 @@ class App < Roda
             :address,
             :name,
             :type,
+            :username,
             :created_at,
             :updated_at
         ).where(address: address).first

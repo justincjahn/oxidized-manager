@@ -59,6 +59,20 @@
         </div>
 
         <div class="fieldset">
+            <label for="type">Username</label>
+            <input
+                type="text"
+                id="type"
+                name="type"
+                value="<%= @device['username'] %>"
+            />
+
+            <% if flash["username"] %>
+                <p class="error"><%= flash["username"] %></p>
+            <% end %>
+        </div>
+
+        <div class="fieldset">
             <label for="password">Password</label>
             <input
                 type="password"

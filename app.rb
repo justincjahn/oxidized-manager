@@ -384,11 +384,18 @@ class App < Roda
                         errors = true
                     end
 
+                    username = r.params["username"].strip
+                    if type.empty?
+                        flash["username"] = "A username is required."
+                        errors = true
+                    end
+
                     r.redirect "/devices/#{name}/edit" if errors
 
                     device[:name] = param_name
                     device[:address] = address
                     device[:type] = type
+                    device[:username] = username
                     device[:updated_at] = DateTime.now
 
                     unless r.params["password"].strip.empty?
@@ -427,12 +434,19 @@ class App < Roda
                     errors = true
                 end
 
+                username = r.params["username"].strip
+                if type.empty?
+                    flash["username"] = "A username is required."
+                    errors = true
+                end
+
                 r.redirect "/devices/new" if errors
 
                 device = {}
                 device[:name] = param_name
                 device[:address] = address
                 device[:type] = type
+                device[:username] = username
                 device[:created_at] = DateTime.now
 
                 unless r.params["password"].strip.empty?

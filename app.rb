@@ -190,7 +190,7 @@ class App < Roda
             "name" => device[:name],
             "address" => device[:address],
             "type" => device[:type],
-            "username" => device[:username]
+            "username" => device[:username],
             "created_at" => device[:created_at],
             "updated_at" => device[:updated_at],
             "status" => !node.nil? ? node['last']['status'] : "not_registered",
